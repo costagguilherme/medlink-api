@@ -31,17 +31,19 @@ public class PacienteController extends BaseController {
     private IPacienteRepository pacienteRepository;
 
     @PostMapping
-    public ResponseEntity create(@RequestBody @Valid PacienteDto data) {
+    public ResponseEntity<Paciente> create(@RequestBody @Valid PacienteDto data) {
         Paciente paciente = new Paciente(data);
-        var savedPaciente = this.pacienteRepository.save(paciente);
-        return ResponseEntity.ok(savedPaciente);
+        Paciente savedPaciente = this.pacienteRepository.save(paciente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPaciente);
     }
 
+
     @GetMapping
-    public ResponseEntity<Page> get(@PageableDefault(size=10) Pageable pagination) {
+    public ResponseEntity<Page<Paciente>> get(@PageableDefault(size = 10) Pageable pagination) {
         Page<Paciente> pacientes = this.pacienteRepository.findAll(pagination);
         return ResponseEntity.ok(pacientes);
     }
+
 
     @GetMapping("/{id}") 
     ResponseEntity<Paciente> getById(@PathVariable Long id) {
