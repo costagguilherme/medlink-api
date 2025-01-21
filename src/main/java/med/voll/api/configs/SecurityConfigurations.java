@@ -15,6 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import med.voll.api.middlewares.AuthMiddleware;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -23,26 +26,33 @@ public class SecurityConfigurations {
     @Autowired
     private AuthMiddleware authMiddleware;
 
-    @Bean // Desativa configurações padrões de segurança do Spring
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(request -> {
+                    var config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:5500"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                    config.setExposedHeaders(List.of("Authorization"));
+                    return config;
+                }))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/login").permitAll();
-                    req.anyRequest().authenticated();
+                    req.requestMatchers("/login").permitAll(); // Permite acesso sem autenticação
+                    req.requestMatchers("/medicos", "/pacientes").authenticated();
                 })
                 .addFilterBefore(this.authMiddleware, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-    
 
-    @Bean // Habilita injeção de dependência do AuthenticationManager
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean // Indica que a senha é encriptada
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

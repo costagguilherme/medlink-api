@@ -27,7 +27,6 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid AuthDto data) {
-
         var token = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
         var authentication = manager.authenticate(token); // Chama AuthService
         var tokenJwt = tokenService.generateToken((Usuario) authentication.getPrincipal());

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.dtos.pacientes.PacienteDto;
 import med.voll.api.dtos.pacientes.PacientePutDto;
-import med.voll.api.enums.GeneroEnum;
 
 import java.util.Date;
 
@@ -26,9 +25,7 @@ public class Paciente {
     private String telefone;
     @Column(name = "data_nascimento")
     private Date dataNascimento;
-
-    @Enumerated(EnumType.STRING)
-    private GeneroEnum genero;
+    private String genero;
 
     private String email;
 
