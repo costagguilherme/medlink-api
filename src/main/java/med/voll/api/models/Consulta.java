@@ -1,5 +1,6 @@
 package med.voll.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -28,10 +29,12 @@ public class Consulta {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medico_id")
+    @JsonIgnore
     private Medico medico;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id")
+    @JsonIgnore
     private Paciente paciente;
 
     private LocalDateTime data;

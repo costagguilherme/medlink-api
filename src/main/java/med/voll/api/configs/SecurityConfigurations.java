@@ -41,7 +41,7 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/login").permitAll(); // Permite acesso sem autenticação
-                    req.requestMatchers("/medicos", "/pacientes").authenticated();
+                    req.requestMatchers("/medicos", "/pacientes", "/consultas").authenticated();
                 })
                 .addFilterBefore(this.authMiddleware, UsernamePasswordAuthenticationFilter.class)
                 .build();
