@@ -40,8 +40,10 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/login").permitAll(); // Permite acesso sem autenticação
-                    req.requestMatchers("/medicos", "/pacientes", "/consultas").authenticated();
+                    req.requestMatchers(HttpMethod.DELETE, "/consultas/**").authenticated();
+                    req.requestMatchers("/login").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/consultas", "/medicos", "/pacientes").authenticated();
+                    req.requestMatchers(HttpMethod.POST, "/consultas", "/medicos", "/pacientes").authenticated();
                 })
                 .addFilterBefore(this.authMiddleware, UsernamePasswordAuthenticationFilter.class)
                 .build();
